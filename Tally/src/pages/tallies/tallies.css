@@ -1,0 +1,25 @@
+.mainContainer {
+    height: 100dvh;
+    width: 99vw;
+    background-color: rgb(27, 27, 27);
+    display: flex;
+    flex-direction: column;
+    padding: 5vw;
+}
+.backButton {
+    margin: 0;
+    padding: 0;
+    width: 125px;
+    height: 55px;
+    background: none;
+    border: 2px solid grey;
+    border-radius: 10px;
+    color: grey;
+    transition: color 0.1s linear, 
+            border 0.1s linear;
+}
+.backButton:hover {
+    cursor: pointer;
+    color: white;
+    border: 2px solid white;
+}

@@ -1,0 +1,43 @@
+.IntroBanner {
+  height: 100dvh;
+  width: 99vw;
+  background-color: rgb(27, 27, 27);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.bodyText {
+  font-family: var(--font-family);
+  line-height: var(--line-height);
+  font-weight: var(--font-weight);
+}
+
+.welcomeText {
+  color: grey;
+}
+
+.startButton {
+  margin: 0;
+  padding: 0;
+  width: 125px;
+  height: 55px;
+  background: none;
+  border: 2px solid grey;
+  border-radius: 10px;
+  color: grey;
+  transition: color 0.1s linear, 
+            border 0.1s linear;
+}
+
+.startButton:hover {
+  cursor: pointer;
+  color: white;
+  border: 2px solid white;
+}
+
+.hoverText {
+  transform: translateY(-15px);
+  color: white;
+}

@@ -1,0 +1,18 @@
+{
+    "tallies": [
+        {
+            "tally_name": "Test",
+            "count_name_1": "Worked Out",
+            "count_1": 56,
+            "count_name_2": "Didn't Work Out",
+            "count_2": 25
+        },
+        {
+            "tally_name": "Test2",
+            "count_name_1": "Jerked Off",
+            "count_1": 56,
+            "count_name_2": "Didn't Jerk Off",
+            "count_2": 25
+        }
+    ]
+}
