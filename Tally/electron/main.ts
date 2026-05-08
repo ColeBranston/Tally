@@ -1,21 +1,35 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+import fs from 'node:fs/promises'
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+console.log("Directory:",__dirname)
 
-// In main.js (Electron Main Process)
-const mongoose = require('mongoose');
+// // In main.js (Electron Main Process)
+// const mongoose = require('mongoose');
 
-// Connect to MongoDB
-mongoose.connect('mongodb+srv://colebranston:Sonic888!@bookingentries.mw84q.mongodb.net/');
+// // Connect to MongoDB
+// mongoose.connect('mongodb+srv://colebranston:Sonic888!@bookingentries.mw84q.mongodb.net/');
 
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  console.log("Connected to MongoDB!");
+// const db = mongoose.connection;
+// db.on('error', console.error.bind(console, 'connection error:'));
+// db.once('open', function() {
+//   console.log("Connected to MongoDB!");
+// });
+
+// listen for the request from the bridge
+ipcMain.handle('read-file', async (_, fileName) => {
+  const filePath = path.join(__dirname, fileName);
+  return await fs.readFile(filePath, 'utf-8');
+});
+
+ipcMain.handle('write-file', async (event, fileName, data) => {
+  const filePath = path.join(__dirname, fileName);
+  await fs.writeFile(filePath, data);
+  return { success: true };
 });
 
 // The built directory structure

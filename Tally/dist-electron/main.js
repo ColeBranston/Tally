@@ -1,15 +1,19 @@
-import { app, BrowserWindow } from "electron";
+import { ipcMain, app, BrowserWindow } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-const require$1 = createRequire(import.meta.url);
+import fs from "node:fs/promises";
+createRequire(import.meta.url);
 const __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
-const mongoose = require$1("mongoose");
-mongoose.connect("mongodb+srv://colebranston:Sonic888!@bookingentries.mw84q.mongodb.net/");
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", function() {
-  console.log("Connected to MongoDB!");
+console.log("Directory:", __dirname$1);
+ipcMain.handle("read-file", async (_, fileName) => {
+  const filePath = path.join(__dirname$1, fileName);
+  return await fs.readFile(filePath, "utf-8");
+});
+ipcMain.handle("write-file", async (event, fileName, data) => {
+  const filePath = path.join(__dirname$1, fileName);
+  await fs.writeFile(filePath, data);
+  return { success: true };
 });
 process.env.APP_ROOT = path.join(__dirname$1, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];

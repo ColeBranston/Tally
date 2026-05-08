@@ -22,3 +22,9 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // You can expose other APTs you need here.
   // ...
 })
+
+contextBridge.exposeInMainWorld('myFileSystem', {
+  // Pass only the necessary arguments to keep it secure
+  readConfig: (fileName:string) => ipcRenderer.invoke('read-file', fileName),
+  saveData: (fileName:string, database:Record<>) => ipcRenderer.invoke('write-file', fileName, database)
+});
