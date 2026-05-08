@@ -6,6 +6,18 @@ import path from 'node:path'
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
+// In main.js (Electron Main Process)
+const mongoose = require('mongoose');
+
+// Connect to MongoDB
+mongoose.connect('mongodb+srv://colebranston:Sonic888!@bookingentries.mw84q.mongodb.net/');
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log("Connected to MongoDB!");
+});
+
 // The built directory structure
 //
 // ├─┬─┬ dist

@@ -10,12 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "better-sqlite3": "^12.9.0",
     "lowdb": "^7.0.1",
+    "mongoose": "^8.23.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.14.2"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
