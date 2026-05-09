@@ -23,8 +23,6 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // ...
 })
 
-contextBridge.exposeInMainWorld('myFileSystem', {
-  // Pass only the necessary arguments to keep it secure
-  readConfig: (fileName:string) => ipcRenderer.invoke('read-file', fileName),
-  saveData: (fileName:string, database:Record<>) => ipcRenderer.invoke('write-file', fileName, database)
+contextBridge.exposeInMainWorld('dbDAO', {
+  getUsers: () => ipcRenderer.invoke('get-users')
 });

@@ -2,25 +2,26 @@ import { ipcMain, app, BrowserWindow } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-import fs from "node:fs/promises";
+import Database from "better-sqlite3";
 createRequire(import.meta.url);
 const __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
 console.log("Directory:", __dirname$1);
-ipcMain.handle("read-file", async (_, fileName) => {
-  const filePath = path.join(__dirname$1, fileName);
-  return await fs.readFile(filePath, "utf-8");
-});
-ipcMain.handle("write-file", async (event, fileName, data) => {
-  const filePath = path.join(__dirname$1, fileName);
-  await fs.writeFile(filePath, data);
-  return { success: true };
-});
 process.env.APP_ROOT = path.join(__dirname$1, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
 const RENDERER_DIST = path.join(process.env.APP_ROOT, "dist");
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
 let win;
+let db;
+function initDatabase() {
+  const dbPath = path.join(app.getPath("userData"), "database.db");
+  db = new Database(dbPath);
+  db.prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT)").run();
+}
+ipcMain.handle("get-users", async () => {
+  if (!db) return [];
+  return db.prepare("SELECT * FROM users").all();
+});
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, "Tally_Icon.png"),
@@ -48,7 +49,10 @@ app.on("activate", () => {
     createWindow();
   }
 });
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  initDatabase();
+  createWindow();
+});
 export {
   MAIN_DIST,
   RENDERER_DIST,
