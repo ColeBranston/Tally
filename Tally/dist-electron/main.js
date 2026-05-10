@@ -16,11 +16,56 @@ let db;
 function initDatabase() {
   const dbPath = path.join(app.getPath("userData"), "database.db");
   db = new Database(dbPath);
-  db.prepare("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT)").run();
+  db.prepare(`CREATE TABLE IF NOT EXISTS STYLE_MAPPING (
+      id INTEGER PRIMARY KEY NOT NULL,
+      name TEXT DEFAULT 'default' NOT NULL
+    )`).run();
+  db.prepare(`CREATE TABLE IF NOT EXISTS TALLY_DB (
+      id INTEGER PRIMARY KEY NOT NULL,
+      name_1 TEXT NOT NULL,
+      count_1 INT DEFAULT 0 NOT NULL,
+      name_2 TEXT NOT NULL,
+      count_2 INT DEFAULT 0 NOT NULL,
+      name_1_mapping INT DEFAULT 1 NOT NULL,
+      name_2_mapping INT DEFAULT 1 NOT NULL,
+      FOREIGN KEY (name_1_mapping) REFERENCES STYLE_MAPPING (id),
+      FOREIGN KEY (name_2_mapping) REFERENCES STYLE_MAPPING (id)
+    )`).run();
 }
-ipcMain.handle("get-users", async () => {
+const insertTally = db.prepare(`
+  INSERT INTO TALLY_DB (name_1, count_1, name_1_mapping) 
+  VALUES (?, ?, ?)
+`);
+insertTally.run(nameFromReact, 0, mappingId);
+ipcMain.handle("get-tables", async () => {
   if (!db) return [];
-  return db.prepare("SELECT * FROM users").all();
+  return db.prepare(
+    `
+    SELECT name 
+    FROM sqlite_schema 
+    WHERE type='table' 
+    ORDER BY name;`
+  ).all();
+});
+ipcMain.handle("run-sql", async (_, sql) => {
+  if (!db) return [];
+  if (sql.toLowerCase().includes("select")) return db.prepare(`${sql}`).all();
+  else if (sql.toLowerCase().includes("insert")) return db.prepare(`${sql}`).run();
+  else if (sql.toLowerCase().includes("delete")) return db.prepare(`${sql}`).run();
+  return "Failed to run, query didn't contain key argument";
+});
+ipcMain.handle("is-admin", () => {
+  if (process.env.NODE_ENV === "development") {
+    console.log("Starting Application in Admin Mode");
+    return true;
+  }
+  return false;
+});
+ipcMain.handle("get-tally", async () => {
+  if (!db) return [];
+  return db.prepare(`
+    SELECT * FROM TALLY_DB
+    `).all();
 });
 function createWindow() {
   win = new BrowserWindow({

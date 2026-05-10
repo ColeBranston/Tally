@@ -24,5 +24,8 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 })
 
 contextBridge.exposeInMainWorld('dbDAO', {
-  getUsers: () => ipcRenderer.invoke('get-users')
+  getTables: () => ipcRenderer.invoke('get-tables'),
+  runSQL: (sql: string) => ipcRenderer.invoke('run-sql', sql),
+  isAdmin: () => ipcRenderer.invoke('is-admin'),
+  getTally: () => ipcRenderer.invoke('get-tally'),
 });
