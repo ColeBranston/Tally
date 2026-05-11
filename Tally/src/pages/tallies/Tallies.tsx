@@ -1,11 +1,17 @@
 import { useNavigate } from "react-router-dom"
 import './tallies.css'
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { TallyType } from "../../vite-env"
 
 export default function Tallies(){
     const navigate = useNavigate()
-
+    const [tallyBoards, setTallyBoards] = useState<TallyType[]>([])
     useEffect(()=>{
+        async function getBoards() {
+            const tempBoards = await window.dbDAO.getAllTallyBoard()
+            setTallyBoards(tempBoards)
+        }
+        getBoards()
     },[])
     return (
         <div className="mainContainer">
@@ -16,6 +22,16 @@ export default function Tallies(){
                     Add Tally
                 </button>
             </div>
+            { tallyBoards.length > 0?
+                Object.entries(tallyBoards).map(([subIndex, board], index) => {
+                    return (
+                        <div key={index} onClick={()=>navigate(`/board/${board.id}`)}>
+                            <p>{board.name_1} VS {board.name_2}</p>
+                        </div>
+                    )
+                })
+                : undefined
+            }
         </div>
     )
 }

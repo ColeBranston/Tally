@@ -31,6 +31,10 @@ function initDatabase() {
       FOREIGN KEY (name_1_mapping) REFERENCES STYLE_MAPPING (id),
       FOREIGN KEY (name_2_mapping) REFERENCES STYLE_MAPPING (id)
     )`).run();
+  const res = db.prepare(`SELECT * FROM style_mapping WHERE name = 'default'`).all();
+  if (res.length < 1) {
+    db.prepare(`INSERT INTO style_mapping (name) VALUES ('default')`).run();
+  }
 }
 ipcMain.handle("get-tables", async () => {
   if (!db) return [];
@@ -67,6 +71,38 @@ ipcMain.handle("get-mappings", async () => {
   return db.prepare(`
     SELECT * FROM STYLE_MAPPING
     `).all();
+});
+ipcMain.handle("create-tally", async (_, boardInfo) => {
+  if (!db) return [];
+  console.log("Incoming new Tally Board: ", boardInfo);
+  let ids;
+  if (boardInfo.mapping_1 === boardInfo.mapping_2) {
+    ids = db.prepare(`
+      SELECT id FROM style_mapping where name = ?
+      LIMIT 1
+    `).all(boardInfo.mapping_1);
+    ids.push(ids[0]);
+  } else {
+    ids = db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_1);
+    ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_2));
+  }
+  console.log(ids);
+  return db.prepare(`
+    INSERT INTO TALLY_DB (
+      name_1,
+      name_2,
+      name_1_mapping,
+      name_2_mapping
+    ) VALUES (
+      ?,
+      ?,
+      ?,
+      ?
+    )
+    `).run(boardInfo.name_1, boardInfo.name_2, ids[0].id, ids[1].id);
+});
+ipcMain.handle("get-allBoards", async () => {
+  return db.prepare(`SELECT * FROM tally_db`).all();
 });
 function createWindow() {
   win = new BrowserWindow({

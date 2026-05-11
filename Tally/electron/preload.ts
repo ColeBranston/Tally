@@ -23,10 +23,19 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // ...
 })
 
+export type boardInfoType = {
+  'name_1': string,
+  'name_2': string,
+  'mapping_1': string,
+  'mapping_2': string
+}
+
 contextBridge.exposeInMainWorld('dbDAO', {
   getTables: () => ipcRenderer.invoke('get-tables'),
   runSQL: (sql: string) => ipcRenderer.invoke('run-sql', sql),
   isAdmin: () => ipcRenderer.invoke('is-admin'),
   getTally: () => ipcRenderer.invoke('get-tally'),
   getMappings: () => ipcRenderer.invoke('get-mappings'),
+  createTallyBoard: (boardInfo: boardInfoType) => ipcRenderer.invoke('create-tally', boardInfo),
+  getAllTallyBoard: () => ipcRenderer.invoke('get-allBoards'),
 });

@@ -3,6 +3,7 @@ import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import Database from 'better-sqlite3'
+import { boardInfoType } from './preload'
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -65,6 +66,13 @@ function initDatabase() {
       FOREIGN KEY (name_1_mapping) REFERENCES STYLE_MAPPING (id),
       FOREIGN KEY (name_2_mapping) REFERENCES STYLE_MAPPING (id)
     )`).run()
+
+    // always starts the applicaton with atleat the default mapping in the mappings table
+    const res = db.prepare(`SELECT * FROM style_mapping WHERE name = 'default'`).all()
+    if (res.length < 1) {
+      db.prepare(`INSERT INTO style_mapping (name) VALUES ('default')`).run()
+    }
+
 }
 
 // Safe way of making insertions to avoid sql injection
@@ -76,6 +84,7 @@ db.prepare(`
 */
 
 // custom functions for table interactions
+///////////////////////////////////////////// IPC Functions //////////////////////////////////////////////////////////////////////////
 ipcMain.handle('get-tables', async () => {
   if (!db) return []
   return db.prepare(`
@@ -116,6 +125,47 @@ ipcMain.handle('get-mappings', async () => {
     SELECT * FROM STYLE_MAPPING
     `).all()
 })
+
+ipcMain.handle('create-tally', async (_, boardInfo: boardInfoType) => {
+  if (!db) return []
+  console.log("Incoming new Tally Board: ", boardInfo)
+
+  // Get mapping id
+
+  let ids
+
+  if (boardInfo.mapping_1 === boardInfo.mapping_2) {
+    ids = db.prepare(`
+      SELECT id FROM style_mapping where name = ?
+      LIMIT 1
+    `).all(boardInfo.mapping_1)
+    ids.push(ids[0])
+  } else {
+    ids = db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_1)
+    ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_2))
+  }
+  console.log(ids)
+  
+  return db.prepare(`
+    INSERT INTO TALLY_DB (
+      name_1,
+      name_2,
+      name_1_mapping,
+      name_2_mapping
+    ) VALUES (
+      ?,
+      ?,
+      ?,
+      ?
+    )
+    `).run(boardInfo.name_1, boardInfo.name_2, (ids[0] as {"id":string}).id, (ids[1] as {"id":string}).id)
+})
+
+ipcMain.handle('get-allBoards', async () => {
+  return db.prepare(`SELECT * FROM tally_db`).all()
+})
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function createWindow() {
   win = new BrowserWindow({

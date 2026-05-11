@@ -7,6 +7,8 @@ export default function addTally() {
 
     const [name1, setName1] = useState<string | null>(null)
     const [name2, setName2] = useState<string | null>(null)
+    const [mapping1, setMapping1] = useState<string>('default')
+    const [mapping2, setMapping2] = useState<string>('default')
 
     const [possibleMappings, setPossibleMappings] = useState<any[]>([])
 
@@ -19,23 +21,39 @@ export default function addTally() {
         getMappings()
     },[])
 
+    async function submitTallyBoard() {
+        console.log("Sending new Tally Board: ", {
+            'name_1': name1,
+            'name_2': name2,
+            'mapping_1': mapping1,
+            'mapping_2': mapping2,
+        })
+        const res = await window.dbDAO.createTallyBoard({
+            'name_1': name1,
+            'name_2': name2,
+            'mapping_1': mapping1,
+            'mapping_2': mapping2,
+        })
+        
+    }
+
     return (
         <div className="mainContainer">
             <div className='navContainer'>
                 <button className='backButton bodyText' onClick={()=>navigate('/tallies')}>Back</button>
                 <p className='bodyText headerContainer'>Create Tally</p>
             </div>
-            <form className='AddTallyForm'>
-                <input placeholder='Name 1'></input>
-                <input placeholder='Name 2'></input>
-                <select>
+            <form className='AddTallyForm' onSubmit={submitTallyBoard}>
+                <input placeholder='Name 1' onChange={(e) => setName1(e.target.value)}></input>
+                <input placeholder='Name 2' onChange={(e) => setName2(e.target.value)}></input>
+                <select onChange={(e) => setMapping1(e.target.value)}>
                     {possibleMappings.length > 0? 
                     Object.entries(possibleMappings).map(([id, row], index) => {
                         return <option key={index} value={row.name} label={row.name}></option>
                     })
                     : undefined}
                 </select>
-                <select>
+                <select onChange={(e) => setMapping2(e.target.value)}>
                     {possibleMappings.length > 0? 
                     Object.entries(possibleMappings).map(([id, row], index) => {
                         return <option key={index} value={row.name} label={row.name}></option>
