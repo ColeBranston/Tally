@@ -30,3 +30,9 @@ body {
   min-height: 100vh;
   overflow: hidden;
 }
+
+.bodyText {
+  font-family: var(--font-family);
+  line-height: var(--line-height);
+  font-weight: var(--font-weight);
+}

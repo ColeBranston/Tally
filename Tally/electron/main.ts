@@ -110,6 +110,13 @@ ipcMain.handle('get-tally', async () => {
     `).all()
 })
 
+ipcMain.handle('get-mappings', async () => {
+  if (!db) return []
+  return db.prepare(`
+    SELECT * FROM STYLE_MAPPING
+    `).all()
+})
+
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'Tally_Icon.png'),

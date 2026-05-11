@@ -7,7 +7,6 @@ function Intro() {
   const [isHovering, setIsHovering] = useState(false)
   const navigate = useNavigate()
   const [tables, setTables] = useState([])
-  const [adminResults, setAdminResults] = useState([])
   const [adminSQL, setAdminSQL] = useState<string>('')
   const [isAdmin, setIsAdmin] = useState<boolean>(false)
 
@@ -28,7 +27,6 @@ function Intro() {
     console.log("Running admin sql query: ", adminSQL)
     const tempDBResults: any = await window.dbDAO.runSQL(adminSQL)
     console.log("Results from query: ", tempDBResults)
-    setAdminResults(tempDBResults)
   }
 
   return (
@@ -41,7 +39,7 @@ function Intro() {
       : null
       }
       <p className={`bodyText welcomeText ${isHovering? 'hoverText' : undefined}`} style={{transition: 'color 0.1s linear, transform 0.5s ease-in'}}>Welcome to Tally</p>
-      <button className='startButton' onMouseEnter={() => setIsHovering(true)} onMouseLeave={()=>setIsHovering(false)} onClick={()=>navigate('/tallies')}>Start</button>
+      <button className='startButton bodyText' onMouseEnter={() => setIsHovering(true)} onMouseLeave={()=>setIsHovering(false)} onClick={()=>navigate('/tallies')}><p className='bodyText'>Start</p></button>
     </div>
   )
 }

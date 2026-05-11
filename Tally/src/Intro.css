@@ -1,3 +1,5 @@
+@import './index.css';
+
 .IntroBanner {
   height: 100dvh;
   width: 99vw;
@@ -6,12 +8,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.bodyText {
-  font-family: var(--font-family);
-  line-height: var(--line-height);
-  font-weight: var(--font-weight);
 }
 
 .welcomeText {

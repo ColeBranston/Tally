@@ -24,5 +24,6 @@ electron.contextBridge.exposeInMainWorld("dbDAO", {
   getTables: () => electron.ipcRenderer.invoke("get-tables"),
   runSQL: (sql) => electron.ipcRenderer.invoke("run-sql", sql),
   isAdmin: () => electron.ipcRenderer.invoke("is-admin"),
-  getTally: () => electron.ipcRenderer.invoke("get-tally")
+  getTally: () => electron.ipcRenderer.invoke("get-tally"),
+  getMappings: () => electron.ipcRenderer.invoke("get-mappings")
 });

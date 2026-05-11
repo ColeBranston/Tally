@@ -1,0 +1,1 @@
+export {Tallies, AddTally} from './tallies/index'

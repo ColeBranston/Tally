@@ -32,11 +32,6 @@ function initDatabase() {
       FOREIGN KEY (name_2_mapping) REFERENCES STYLE_MAPPING (id)
     )`).run();
 }
-const insertTally = db.prepare(`
-  INSERT INTO TALLY_DB (name_1, count_1, name_1_mapping) 
-  VALUES (?, ?, ?)
-`);
-insertTally.run(nameFromReact, 0, mappingId);
 ipcMain.handle("get-tables", async () => {
   if (!db) return [];
   return db.prepare(
@@ -65,6 +60,12 @@ ipcMain.handle("get-tally", async () => {
   if (!db) return [];
   return db.prepare(`
     SELECT * FROM TALLY_DB
+    `).all();
+});
+ipcMain.handle("get-mappings", async () => {
+  if (!db) return [];
+  return db.prepare(`
+    SELECT * FROM STYLE_MAPPING
     `).all();
 });
 function createWindow() {

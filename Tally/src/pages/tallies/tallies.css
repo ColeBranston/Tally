@@ -1,3 +1,5 @@
+@import '../../index.css';
+
 .mainContainer {
     height: 100dvh;
     width: 99vw;
@@ -5,6 +7,13 @@
     display: flex;
     flex-direction: column;
     padding: 5vw;
+}
+.navContainer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
 }
 .backButton {
     margin: 0;
@@ -17,9 +26,41 @@
     color: grey;
     transition: color 0.1s linear, 
             border 0.1s linear;
+
+    font-size: 16px;
 }
 .backButton:hover {
     cursor: pointer;
     color: white;
     border: 2px solid white;
+}
+.addTallyButton {
+    width: 150px;
+    height: 40px;
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    outline: none;
+    color: grey;
+    transition: color 0.1s linear;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    
+    font-size: 16px;
+}
+.addTallyButton:hover {
+    cursor: pointer;
+    color: white;
+}
+.addTallyButton svg {
+    width: 40px;
+}
+.addTallyButton svg {
+    stroke: grey;
+    transition: stroke 0.1s linear;
+}
+.addTallyButton:hover svg {
+    stroke: white;
 }
