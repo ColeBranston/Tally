@@ -112,13 +112,6 @@ ipcMain.handle('is-admin', () => {
   return false
 })
 
-ipcMain.handle('get-tally', async () => {
-  if (!db) return []
-  return db.prepare(`
-    SELECT * FROM TALLY_DB
-    `).all()
-})
-
 ipcMain.handle('get-mappings', async () => {
   if (!db) return []
   return db.prepare(`
@@ -164,6 +157,45 @@ ipcMain.handle('create-tally', async (_, boardInfo: boardInfoType) => {
 ipcMain.handle('get-allBoards', async () => {
   return db.prepare(`SELECT * FROM tally_db`).all()
 })
+
+ipcMain.handle('get-tally', async (_, id: number) => {
+  if (!db) return []
+  return db.prepare(`
+    SELECT * FROM TALLY_DB where id = ?
+    `).all(id)
+})
+
+ipcMain.handle('get-mapping-names', async (_, mapping1: number, mapping2: number) => {
+  if (!db) return []
+  
+  let names
+
+  if (mapping1 === mapping2) {
+    names = db.prepare(`
+      SELECT name FROM style_mapping where id = ?
+      LIMIT 1
+    `).all(mapping1)
+    names.push(names[0])
+  } else {
+    names = db.prepare(`SELECT name FROM style_mapping where id = ? LIMIT 1`).all(mapping1)
+    names.push(db.prepare(`SELECT name FROM style_mapping where id = ? LIMIT 1`).all(mapping2))
+  }
+  console.log(names)
+  return names
+})
+
+// increments count on a tally board based on the count selector flag
+ipcMain.handle('increment-count', async (_, id: number, isFirst: boolean) => {
+  if (isFirst) return db.prepare(`UPDATE Tally_DB SET count_1 = count_1 + 1 WHERE id = ?`).run(id)
+  return db.prepare(`UPDATE Tally_DB SET count_2 = count_2 + 1 WHERE id = ?`).run(id)
+})
+
+// decrements count on a tally board based on the count selector flag
+ipcMain.handle('subtract-count', async (_, id: number, isFirst: boolean) => {
+  if (isFirst) return db.prepare(`UPDATE Tally_DB SET count_1 = count_1 - 1 WHERE id = ?`).run(id)
+  return db.prepare(`UPDATE Tally_DB SET count_2 = count_2 - 1 WHERE id = ?`).run(id)
+})
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

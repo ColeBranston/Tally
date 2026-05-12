@@ -10,10 +10,13 @@ export interface IElectronAPI {
   getTables: () => Promise<any[]>;
   runSQL: (sql: string) => Promise<any[]>;
   isAdmin: () => Promise<boolean>;
-  getTally: () => Promise<any[]>;
   getMappings: () => Promise<any[]>
   createTallyBoard: (tallyboard) => Promise<any[]>
   getAllTallyBoard: () => Promise<TallyType[]>
+  getTally: (id) => Promise<TallyType[]>;
+  getMappingNames: (mappingName1, mappingName2) => Promise<Record<number, Record<string, string>>>;
+  incrementCount: (id: number, isFirst: boolean) => Promise<any>;
+  subtractCount: (id: number, isFirst: boolean) => Promise<any>;
 }
 
 export type TallyType = {

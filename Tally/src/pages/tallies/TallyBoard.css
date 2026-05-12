@@ -1,0 +1,25 @@
+/* Other styles come from the tallies.css file and AddTally.css*/
+
+.tallyContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-color: blue;
+}
+.scoreContainer1, .scoreContainer2 {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.scoreContainer1 {
+    border-right: 2px solid white;
+}
+.headerText {
+    font-family: var(--font-family);
+    font-size: 16px;
+    font-weight: bold;
+}

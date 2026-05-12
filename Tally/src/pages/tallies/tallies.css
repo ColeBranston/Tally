@@ -1,13 +1,5 @@
 @import '../../index.css';
 
-.mainContainer {
-    height: 100dvh;
-    width: 99vw;
-    background-color: rgb(27, 27, 27);
-    display: flex;
-    flex-direction: column;
-    padding: 5vw;
-}
 .navContainer {
     display: flex;
     gap: 10px;
