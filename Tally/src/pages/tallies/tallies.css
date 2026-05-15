@@ -56,3 +56,38 @@
 .addTallyButton:hover svg {
     stroke: white;
 }
+.boardListContainer {
+    background-color: transparent;
+    height: 100%;
+    overflow-x: auto;
+    display: flex;
+    gap: 20px;
+    overflow: visible;
+    justify-content: flex-start;
+    align-items: center;
+}
+.boardContainer {
+    background-color: rgba(0, 0, 0, 0.295);
+    width: 300px;
+    height: 300px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid transparent;
+    position: relative;
+    z-index: 0;
+    transition: border 0.1s linear;
+    font-family: var(--font-family);
+    font-weight: bolder;
+}
+.boardContainer:hover {
+    cursor: pointer;
+    border: 2px solid white;
+    background: linear-gradient(
+        #000 20%,
+        #1a1a1a 40%,
+        #555 70%,
+        #fff 100%
+    );
+}

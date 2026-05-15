@@ -22,16 +22,18 @@ export default function Tallies(){
                     Add Tally
                 </button>
             </div>
+            <div className="boardListContainer">
             { tallyBoards.length > 0?
                 Object.entries(tallyBoards).map(([subIndex, board], index) => {
                     return (
-                        <div key={index} onClick={()=>navigate(`/board/${board.id}`)}>
+                        <div className="boardContainer" key={index} onClick={()=>navigate(`/board/${board.id}`)}>
                             <p>{board.name_1} VS {board.name_2}</p>
                         </div>
                     )
                 })
                 : undefined
             }
+            </div>
         </div>
     )
 }

@@ -26,22 +26,26 @@ export default function TallyBoard() {
             setMapping2(mappings[1].name)
         }
         getTallyBoard()
+    }, [params.id])
 
-
-         // detects if space bar clicked
-
-        const handleKeyDown = (e: any) => {
-            if (e.code === 'Space' && !e.repeat) {
+    useEffect(() => {
+        // detects if space bar clicked
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === ' ' && !e.repeat) {
                 console.log('Space pressed');
+
+                e.stopImmediatePropagation();  // electron specific behavior for event listeners
+                e.preventDefault();
+
                 setSpacePress((prev) => prev + 1);
             }
         };
 
-        window.addEventListener('keydown', handleKeyDown);
+        document.addEventListener('keydown', handleKeyDown);
 
         // 3. Cleanup: Remove it when the component unmounts
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [])
+        return () => document.removeEventListener('keydown', handleKeyDown); // must return event listener so that its removed when the componet dimounts
+    },[])
 
     async function addCount(isFirst: boolean) {
         const id = tallyData?.id
