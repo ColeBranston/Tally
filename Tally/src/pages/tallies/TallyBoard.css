@@ -7,13 +7,24 @@
     width: 100%;
     height: 100%;
     border-color: blue;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
+
+/* Chrome, Edge, Safari */
+.tallyContainer::-webkit-scrollbar {
+    display: none;
+}
+
 .scoreContainer1, .scoreContainer2 {
     width: 50%;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0 10px 0 10px ;
+    overflow: visible;
+    gap: 10px;
 }
 .scoreContainer1 {
     border-right: 2px solid white;
@@ -22,4 +33,46 @@
     font-family: var(--font-family);
     font-size: 16px;
     font-weight: bold;
+}
+.boxContainer {
+    display: flex;
+    gap: 10px 10px;
+    min-width: 300px;
+    width: 100%;
+    background-color: transparent;
+    flex-wrap: wrap;
+}
+.counterBox {
+    width: 7vw;
+    height: 7vw;
+    background-color: transparent;
+}
+.scoreHeader {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+.scoreHeader p {
+    margin: 0;
+}
+.scoreHeader button {
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    border: 1px solid grey;
+    color: grey;
+    text-align: center;
+    transition: color 0.1s linear,
+                border 0.1s linear;
+}
+.scoreHeader button:hover {
+    color: white;
+    border: 1px solid white;
+    cursor: pointer;
 }

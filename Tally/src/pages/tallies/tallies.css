@@ -62,14 +62,41 @@
     overflow-x: auto;
     display: flex;
     gap: 20px;
-    overflow: visible;
     justify-content: flex-start;
     align-items: center;
 }
+
+/* Chrome, Edge, Safari */
+.boardListContainer::-webkit-scrollbar {
+    height: 8px; /* horizontal scrollbar */
+}
+
+.boardListContainer::-webkit-scrollbar-track {
+    background: transparent; /* no background */
+}
+
+.boardListContainer::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+        90deg,
+        #ff0080,
+        #7928ca,
+        #00c6ff,
+        #ff0080
+    );
+    border-radius: 999px; /* fully rounded */
+}
+
+/* Remove arrows/buttons */
+.boardListContainer::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
 .boardContainer {
     background-color: rgba(0, 0, 0, 0.295);
-    width: 300px;
-    height: 300px;
+    min-width: 300px;
+    min-height: 300px;
     border-radius: 5px;
     display: flex;
     justify-content: center;
@@ -77,8 +104,7 @@
     border: 2px solid transparent;
     position: relative;
     z-index: 0;
-    transition: border 0.1s linear,
-                background 0.1s linear;
+    transition: border 0.1s linear;
     font-family: var(--font-family);
     font-weight: bolder;
 }

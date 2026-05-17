@@ -1,9 +1,9 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import './TallyBoard.css'
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { TallyType } from '../../vite-env'
 
-import { DefaultSquare } from '../../_squares/index'
+import { DefaultSquare, RedSquare } from '../../_squares/index'
 
 export default function TallyBoard() {
     const params = useParams()
@@ -24,6 +24,7 @@ export default function TallyBoard() {
             const mappings: Record<number, Record<string, string>> = await window.dbDAO.getMappingNames(tallyInfo.name_1_mapping, tallyInfo.name_2_mapping)
             setMapping1(mappings[0].name)
             setMapping2(mappings[1].name)
+            console.log('mappings: ', mappings)
         }
         getTallyBoard()
     }, [params.id])
@@ -100,14 +101,10 @@ export default function TallyBoard() {
         }
     }
 
-    const mappings = {
-        "default": <DefaultSquare/>
+    const mappings: Record<string,ReactNode> = {
+        "default": <DefaultSquare/>,
+        "Red Square": <RedSquare/>
     }
-
-    addEventListener('keydown', (e) => {
-        e.code === 'Space'? console.log(e) : null
-        setSpacePress((prev)=>prev+1)
-    })
 
     return (
         <div className="mainContainer">
@@ -122,8 +119,12 @@ export default function TallyBoard() {
                         <p>{tallyData?.count_1}</p>
                         <button onClick={()=>addCount(true)}>+</button>
                         <button onClick={()=>subtractCount(true)}>-</button>
-
                     </div>
+                    <div className='boxContainer'>
+                        {Array.from({ length: tallyData?.count_1 || 0 }).map((_, i) => (
+                            <td key={i} className='counterBox'>{mappings[mapping1]}</td>
+                        ))}
+                    </div> 
                 </div>
                 <div className='scoreContainer2'>
                     <div className='scoreHeader'>
@@ -132,6 +133,11 @@ export default function TallyBoard() {
                         <button onClick={()=>addCount(false)}>+</button>
                         <button onClick={()=>subtractCount(false)}>-</button>
                     </div>
+                    <div className='boxContainer'>
+                        {Array.from({ length: tallyData?.count_2 || 0 }).map((_, i) => (
+                            <td key={i} className='counterBox'>{mappings[mapping2]}</td>
+                        ))}
+                    </div>    
                 </div>
             </div>
         </div>

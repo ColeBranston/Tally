@@ -100,7 +100,7 @@ ipcMain.handle('run-sql', async (_,sql: string) => {
   if (sql.toLowerCase().includes('select')) return db.prepare(`${sql}`).all()
   else if (sql.toLowerCase().includes('insert')) return db.prepare(`${sql}`).run()
   else if (sql.toLowerCase().includes('delete')) return db.prepare(`${sql}`).run()
-
+  else if (sql.toLowerCase().includes('update')) return db.prepare(`${sql}`).run()
   return "Failed to run, query didn't contain key argument"
 })
 
@@ -125,17 +125,16 @@ ipcMain.handle('create-tally', async (_, boardInfo: boardInfoType) => {
 
   // Get mapping id
 
-  let ids
+  let ids = []
 
   if (boardInfo.mapping_1 === boardInfo.mapping_2) {
-    ids = db.prepare(`
+    ids.push(db.prepare(`
       SELECT id FROM style_mapping where name = ?
       LIMIT 1
-    `).all(boardInfo.mapping_1)
-    ids.push(ids[0])
+    `).all(boardInfo.mapping_1)[0])
   } else {
-    ids = db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_1)
-    ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_2))
+    ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_1)[0])
+    ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_2)[0])
   }
   console.log(ids)
   
@@ -168,17 +167,16 @@ ipcMain.handle('get-tally', async (_, id: number) => {
 ipcMain.handle('get-mapping-names', async (_, mapping1: number, mapping2: number) => {
   if (!db) return []
   
-  let names
+  let names = []
 
   if (mapping1 === mapping2) {
-    names = db.prepare(`
+    names.push(db.prepare(`
       SELECT name FROM style_mapping where id = ?
       LIMIT 1
-    `).all(mapping1)
-    names.push(names[0])
+    `).all(mapping1)[0])
   } else {
-    names = db.prepare(`SELECT name FROM style_mapping where id = ? LIMIT 1`).all(mapping1)
-    names.push(db.prepare(`SELECT name FROM style_mapping where id = ? LIMIT 1`).all(mapping2))
+    names.push(db.prepare(`SELECT name FROM style_mapping where id = ? LIMIT 1`).all(mapping1)[0])
+    names.push(db.prepare(`SELECT name FROM style_mapping where id = ? LIMIT 1`).all(mapping2)[0])
   }
   console.log(names)
   return names
