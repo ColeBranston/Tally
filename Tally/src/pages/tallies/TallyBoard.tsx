@@ -3,7 +3,7 @@ import './TallyBoard.css'
 import { ReactNode, useEffect, useState } from 'react'
 import { TallyType } from '../../vite-env'
 
-import { DefaultSquare, RedSquare } from '../../_squares/index'
+import { DefaultSquare, PurpleSquare, RedSquare } from '../../_squares/index'
 
 export default function TallyBoard() {
     const params = useParams()
@@ -103,7 +103,8 @@ export default function TallyBoard() {
 
     const mappings: Record<string,ReactNode> = {
         "default": <DefaultSquare/>,
-        "Red Square": <RedSquare/>
+        "Red Square": <RedSquare/>,
+        "Purple Square": <PurpleSquare/>
     }
 
     return (

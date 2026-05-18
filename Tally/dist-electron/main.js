@@ -36,6 +36,16 @@ function initDatabase() {
     db.prepare(`INSERT INTO style_mapping (name) VALUES ('default')`).run();
   }
 }
+function _instantiateBox(name) {
+  if (!db) return [];
+  console.log("Loading Box: ", name);
+  db.prepare(`
+    INSERT INTO style_mapping (name) SELECT ?
+    WHERE NOT EXISTS (
+      SELECT 1 FROM style_mapping where name = ?
+    )
+    `).run(name, name);
+}
 ipcMain.handle("get-tables", async () => {
   if (!db) return [];
   return db.prepare(
@@ -127,6 +137,10 @@ ipcMain.handle("subtract-count", async (_, id, isFirst) => {
   if (isFirst) return db.prepare(`UPDATE Tally_DB SET count_1 = count_1 - 1 WHERE id = ?`).run(id);
   return db.prepare(`UPDATE Tally_DB SET count_2 = count_2 - 1 WHERE id = ?`).run(id);
 });
+function boxLoading() {
+  _instantiateBox("Red Square");
+  _instantiateBox("Purple Square");
+}
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, "Tally_Icon.png"),
@@ -156,6 +170,7 @@ app.on("activate", () => {
 });
 app.whenReady().then(() => {
   initDatabase();
+  boxLoading();
   createWindow();
 });
 export {

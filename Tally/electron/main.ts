@@ -75,6 +75,17 @@ function initDatabase() {
 
 }
 
+function _instantiateBox(name: string){
+  if (!db) return []
+  console.log("Loading Box: ", name)
+  db.prepare(`
+    INSERT INTO style_mapping (name) SELECT ?
+    WHERE NOT EXISTS (
+      SELECT 1 FROM style_mapping where name = ?
+    )
+    `).run(name, name)
+}
+
 // Safe way of making insertions to avoid sql injection
 /* 
 db.prepare(`
@@ -193,7 +204,12 @@ ipcMain.handle('subtract-count', async (_, id: number, isFirst: boolean) => {
   if (isFirst) return db.prepare(`UPDATE Tally_DB SET count_1 = count_1 - 1 WHERE id = ?`).run(id)
   return db.prepare(`UPDATE Tally_DB SET count_2 = count_2 - 1 WHERE id = ?`).run(id)
 })
+/////////////////////////////////////////// Box Loading ///////////////////////////////////////////////////////////////
 
+function boxLoading() {
+  _instantiateBox('Red Square')
+  _instantiateBox('Purple Square')
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -238,5 +254,6 @@ app.on('activate', () => {
 
 app.whenReady().then(()=>{
   initDatabase()
+  boxLoading()
   createWindow()
 })
