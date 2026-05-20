@@ -123,7 +123,7 @@
 }
 @keyframes movingBackground {
     0% {
-        background-position: 0% 50%;
+        background-position: 0% 50%; /* x, y */
     }
 
     50% {

@@ -27,7 +27,7 @@ export default function Tallies(){
                 Object.entries(tallyBoards).map(([subIndex, board], index) => {
                     return (
                         <div className="boardContainer" key={index} onClick={()=>navigate(`/board/${board.id}`)}>
-                            <p>{board.name_1} VS {board.name_2}</p>
+                            <p key={subIndex}>{board.name_1} VS {board.name_2}</p>
                         </div>
                     )
                 })

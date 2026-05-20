@@ -1,11 +1,9 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
-import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import Database from 'better-sqlite3'
 import { boardInfoType } from './preload'
 
-const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 console.log("Directory:",__dirname)
@@ -209,6 +207,7 @@ ipcMain.handle('subtract-count', async (_, id: number, isFirst: boolean) => {
 function boxLoading() {
   _instantiateBox('Red Square')
   _instantiateBox('Purple Square')
+  _instantiateBox('Blue-Purple Gradient Square')
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -219,6 +218,8 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
     },
+    width: 800,
+    height: 600,
   })
 
   // Test active push message to Renderer-process.

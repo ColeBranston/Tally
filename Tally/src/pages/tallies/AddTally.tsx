@@ -34,7 +34,7 @@ export default function addTally() {
             'mapping_1': mapping1,
             'mapping_2': mapping2,
         })
-        
+        if (res) console.log("New Board Sent to Backend")
     }
 
     return (
@@ -49,14 +49,14 @@ export default function addTally() {
                 <select onChange={(e) => setMapping1(e.target.value)}>
                     {possibleMappings.length > 0? 
                     Object.entries(possibleMappings).map(([id, row], index) => {
-                        return <option key={index} value={row.name} label={row.name}></option>
+                        return <option key={index + id} value={row.name} label={row.name}></option>
                     })
                     : undefined}
                 </select>
                 <select onChange={(e) => setMapping2(e.target.value)}>
                     {possibleMappings.length > 0? 
                     Object.entries(possibleMappings).map(([id, row], index) => {
-                        return <option key={index} value={row.name} label={row.name}></option>
+                        return <option key={index + id} value={row.name} label={row.name}></option>
                     })
                     : undefined}
                 </select>
