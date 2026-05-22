@@ -134,3 +134,10 @@
         background-position: 0% 50%;
     }
 }
+.boardContainer p {
+    max-width: 200px;
+    text-align: center;
+}
+.active {
+    background-color: red;
+}

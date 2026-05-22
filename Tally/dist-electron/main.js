@@ -1,9 +1,7 @@
 import { ipcMain, app, BrowserWindow } from "electron";
-import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import Database from "better-sqlite3";
-createRequire(import.meta.url);
 const __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
 console.log("Directory:", __dirname$1);
 process.env.APP_ROOT = path.join(__dirname$1, "..");
@@ -81,15 +79,8 @@ ipcMain.handle("create-tally", async (_, boardInfo) => {
   if (!db) return [];
   console.log("Incoming new Tally Board: ", boardInfo);
   let ids = [];
-  if (boardInfo.mapping_1 === boardInfo.mapping_2) {
-    ids.push(db.prepare(`
-      SELECT id FROM style_mapping where name = ?
-      LIMIT 1
-    `).all(boardInfo.mapping_1)[0]);
-  } else {
-    ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_1)[0]);
-    ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_2)[0]);
-  }
+  ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_1)[0]);
+  ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_2)[0]);
   console.log(ids);
   return db.prepare(`
     INSERT INTO TALLY_DB (
@@ -107,6 +98,13 @@ ipcMain.handle("create-tally", async (_, boardInfo) => {
 });
 ipcMain.handle("get-allBoards", async () => {
   return db.prepare(`SELECT * FROM tally_db`).all();
+});
+ipcMain.handle("delete-boardById", async (_, id) => {
+  if (!db) return [];
+  console.log("Deleteing Board: ", id);
+  return db.prepare(`
+    DELETE FROM tally_db WHERE id = ?
+    `).run(id);
 });
 ipcMain.handle("get-tally", async (_, id) => {
   if (!db) return [];
@@ -140,13 +138,16 @@ ipcMain.handle("subtract-count", async (_, id, isFirst) => {
 function boxLoading() {
   _instantiateBox("Red Square");
   _instantiateBox("Purple Square");
+  _instantiateBox("Blue-Purple Gradient Square");
 }
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, "Tally_Icon.png"),
     webPreferences: {
       preload: path.join(__dirname$1, "preload.mjs")
-    }
+    },
+    width: 800,
+    height: 600
   });
   win.webContents.on("did-finish-load", () => {
     win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());

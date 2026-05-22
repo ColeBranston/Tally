@@ -27,6 +27,7 @@ electron.contextBridge.exposeInMainWorld("dbDAO", {
   getMappings: () => electron.ipcRenderer.invoke("get-mappings"),
   createTallyBoard: (boardInfo) => electron.ipcRenderer.invoke("create-tally", boardInfo),
   getAllTallyBoard: () => electron.ipcRenderer.invoke("get-allBoards"),
+  deleteBoardByID: (id) => electron.ipcRenderer.invoke("delete-boardById", id),
   getTally: (id) => electron.ipcRenderer.invoke("get-tally", id),
   getMappingNames: (mapping1, mapping2) => electron.ipcRenderer.invoke("get-mapping-names", mapping1, mapping2),
   incrementCount: (id, isFirst) => electron.ipcRenderer.invoke("increment-count", id, isFirst),

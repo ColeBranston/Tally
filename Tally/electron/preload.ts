@@ -37,6 +37,7 @@ contextBridge.exposeInMainWorld('dbDAO', {
   getMappings: () => ipcRenderer.invoke('get-mappings'),
   createTallyBoard: (boardInfo: boardInfoType) => ipcRenderer.invoke('create-tally', boardInfo),
   getAllTallyBoard: () => ipcRenderer.invoke('get-allBoards'),
+  deleteBoardByID: (id: number) => ipcRenderer.invoke('delete-boardById', id),
   getTally: (id: number) => ipcRenderer.invoke('get-tally', id),
   getMappingNames: (mapping1: number, mapping2: number) => ipcRenderer.invoke('get-mapping-names', mapping1, mapping2),
   incrementCount: (id: number, isFirst: boolean) => ipcRenderer.invoke("increment-count", id, isFirst),

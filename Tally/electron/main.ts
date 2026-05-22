@@ -136,15 +136,9 @@ ipcMain.handle('create-tally', async (_, boardInfo: boardInfoType) => {
 
   let ids = []
 
-  if (boardInfo.mapping_1 === boardInfo.mapping_2) {
-    ids.push(db.prepare(`
-      SELECT id FROM style_mapping where name = ?
-      LIMIT 1
-    `).all(boardInfo.mapping_1)[0])
-  } else {
-    ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_1)[0])
-    ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_2)[0])
-  }
+  ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_1)[0])
+  ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_2)[0])
+  
   console.log(ids)
   
   return db.prepare(`
@@ -164,6 +158,14 @@ ipcMain.handle('create-tally', async (_, boardInfo: boardInfoType) => {
 
 ipcMain.handle('get-allBoards', async () => {
   return db.prepare(`SELECT * FROM tally_db`).all()
+})
+
+ipcMain.handle('delete-boardById', async (_, id: number) => {
+  if (!db) return []
+  console.log("Deleteing Board: ", id)
+  return db.prepare(`
+    DELETE FROM tally_db WHERE id = ?
+    `).run(id)
 })
 
 ipcMain.handle('get-tally', async (_, id: number) => {
