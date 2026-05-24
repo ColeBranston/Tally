@@ -17,6 +17,10 @@ export interface IElectronAPI {
   getMappingNames: (mappingName1, mappingName2) => Promise<Record<number, Record<string, string>>>;
   incrementCount: (id: number, isFirst: boolean) => Promise<any>;
   subtractCount: (id: number, isFirst: boolean) => Promise<any>;
+  deleteBoardByID: (id: number) => Promise<any>;
+  permDeleteBoardByID: (id: number) => Promise<any>;
+  recoverBoardByID: (id: number) => Promise<any>;
+  getAllInactiveTallyBoards: () => Promise<any>
 }
 
 export type TallyType = {

@@ -10,7 +10,7 @@
 .backButton {
     margin: 0;
     padding: 0;
-    width: 125px;
+    min-width: 125px;
     height: 55px;
     background: none;
     border: 2px solid grey;
@@ -26,8 +26,8 @@
     color: white;
     border: 2px solid white;
 }
-.addTallyButton {
-    width: 150px;
+.tallyButton {
+    min-width: 180px;
     height: 40px;
     background-color: transparent;
     border: none;
@@ -42,18 +42,21 @@
     
     font-size: 16px;
 }
-.addTallyButton:hover {
+.tallyButton p {
+    min-width: min-content;
+}
+.tallyButton:hover {
     cursor: pointer;
     color: white;
 }
-.addTallyButton svg {
+.tallyButton svg {
     width: 40px;
 }
-.addTallyButton svg {
+.tallyButton svg {
     stroke: grey;
     transition: stroke 0.1s linear;
 }
-.addTallyButton:hover svg {
+.tallyButton:hover svg {
     stroke: white;
 }
 .boardListContainer {
@@ -133,4 +136,15 @@
     100% {
         background-position: 0% 50%;
     }
+}
+.boardContainer p {
+    max-width: 200px;
+    text-align: center;
+}
+.active {
+    color: white;
+}
+
+.active svg {
+    stroke: white;
 }

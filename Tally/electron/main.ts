@@ -61,6 +61,7 @@ function initDatabase() {
       count_2 INT DEFAULT 0 NOT NULL,
       name_1_mapping INT DEFAULT 1 NOT NULL,
       name_2_mapping INT DEFAULT 1 NOT NULL,
+      active BOOLEAN DEFAULT 1 NOT NULL CHECK (active IN (0,1)),
       FOREIGN KEY (name_1_mapping) REFERENCES STYLE_MAPPING (id),
       FOREIGN KEY (name_2_mapping) REFERENCES STYLE_MAPPING (id)
     )`).run()
@@ -105,11 +106,12 @@ ipcMain.handle('get-tables', async () => {
 })
 
 ipcMain.handle('run-sql', async (_,sql: string) => {
-  if (!db) return []
+  if (!db || process.env.NODE_ENV !== 'development') return []
   if (sql.toLowerCase().includes('select')) return db.prepare(`${sql}`).all()
   else if (sql.toLowerCase().includes('insert')) return db.prepare(`${sql}`).run()
   else if (sql.toLowerCase().includes('delete')) return db.prepare(`${sql}`).run()
   else if (sql.toLowerCase().includes('update')) return db.prepare(`${sql}`).run()
+  else if (sql.toLowerCase().includes('alter')) return db.prepare(`${sql}`).run()
   return "Failed to run, query didn't contain key argument"
 })
 
@@ -136,15 +138,9 @@ ipcMain.handle('create-tally', async (_, boardInfo: boardInfoType) => {
 
   let ids = []
 
-  if (boardInfo.mapping_1 === boardInfo.mapping_2) {
-    ids.push(db.prepare(`
-      SELECT id FROM style_mapping where name = ?
-      LIMIT 1
-    `).all(boardInfo.mapping_1)[0])
-  } else {
-    ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_1)[0])
-    ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_2)[0])
-  }
+  ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_1)[0])
+  ids.push(db.prepare(`SELECT id FROM style_mapping where name = ? LIMIT 1`).all(boardInfo.mapping_2)[0])
+  
   console.log(ids)
   
   return db.prepare(`
@@ -163,7 +159,36 @@ ipcMain.handle('create-tally', async (_, boardInfo: boardInfoType) => {
 })
 
 ipcMain.handle('get-allBoards', async () => {
-  return db.prepare(`SELECT * FROM tally_db`).all()
+  return db.prepare(`SELECT * FROM tally_db where active = 1`).all()
+})
+
+ipcMain.handle('get-inactiveBoards', async () => {
+  if (!db) return[]
+  return db.prepare(`
+      SELECT * FROM tally_db WHERE active = 0 
+    `).all()
+})
+
+ipcMain.handle(`recover-boardById`, async (_, id: number) => {
+  if (!db) return []
+  return db.prepare(`
+    UPDATE tally_db set active = 1 where id = ?
+    `).run(id)
+})
+
+ipcMain.handle(`permDelete-boardById`, async (_, id: number) => {
+  if (!db) return []
+  return db.prepare(`
+    DELETE FROM tally_db WHERE id = ?
+    `).run(id)
+})
+
+ipcMain.handle('delete-boardById', async (_, id: number) => {
+  if (!db) return []
+  console.log("Deleteing Board: ", id)
+  return db.prepare(`
+    UPDATE tally_db SET active = 0 WHERE id = ?
+    `).run(id)
 })
 
 ipcMain.handle('get-tally', async (_, id: number) => {
