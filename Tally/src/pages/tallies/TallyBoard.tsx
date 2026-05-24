@@ -23,8 +23,8 @@ export default function TallyBoard() {
 
             const mappings: Record<number, Record<string, string>> = await window.dbDAO.getMappingNames(tallyInfo.name_1_mapping, tallyInfo.name_2_mapping)
             setMapping1(mappings[0].name)
-            setMapping2(mappings[1].name)
             console.log('mappings: ', mappings)
+            setMapping2(mappings[1].name)
         }
         getTallyBoard()
     }, [params.id])
@@ -48,12 +48,13 @@ export default function TallyBoard() {
         return () => document.removeEventListener('keydown', handleKeyDown); // must return event listener so that its removed when the componet dimounts
     },[])
 
+
+    // TODO: Debounce the increment and decrement calls to be more performant => change ipc handle to take in a value to increment or decrement for debounce
     async function addCount(isFirst: boolean) {
         const id = tallyData?.id
         if (!id) return 
 
-        const res = await window.dbDAO.incrementCount(id, isFirst);
-        console.log(res)
+        window.dbDAO.incrementCount(id, isFirst);
 
         if (isFirst) { // crazy inner logic of useState setter confirms prev isn't null to abide by type checks
             setTallyData((prev) => {
@@ -80,8 +81,7 @@ export default function TallyBoard() {
         //checks if relevant count is 0 or less and exits method if user attempt to create a negatve count
         if ((isFirst? tallyData.count_1 : tallyData.count_2) < 1) return
         
-        const res = await window.dbDAO.subtractCount(id, isFirst);
-        console.log(res)
+        window.dbDAO.subtractCount(id, isFirst);
 
         if (isFirst) { // crazy inner logic of useState setter confirms prev isn't null to abide by type checks
             setTallyData((prev) => {

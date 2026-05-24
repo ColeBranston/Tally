@@ -203,16 +203,9 @@ ipcMain.handle('get-mapping-names', async (_, mapping1: number, mapping2: number
   
   let names = []
 
-  if (mapping1 === mapping2) {
-    names.push(db.prepare(`
-      SELECT name FROM style_mapping where id = ?
-      LIMIT 1
-    `).all(mapping1)[0])
-  } else {
-    names.push(db.prepare(`SELECT name FROM style_mapping where id = ? LIMIT 1`).all(mapping1)[0])
-    names.push(db.prepare(`SELECT name FROM style_mapping where id = ? LIMIT 1`).all(mapping2)[0])
-  }
-  console.log(names)
+  names.push(db.prepare(`SELECT name FROM style_mapping where id = ? LIMIT 1`).all(mapping1)[0])
+  names.push(db.prepare(`SELECT name FROM style_mapping where id = ? LIMIT 1`).all(mapping2)[0])
+
   return names
 })
 

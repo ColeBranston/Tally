@@ -35,6 +35,7 @@ export default function addTally() {
             'mapping_2': mapping2,
         })
         if (res) console.log("New Board Sent to Backend")
+        navigate('/tallies')
     }
 
     return (
