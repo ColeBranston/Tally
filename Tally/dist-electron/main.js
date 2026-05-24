@@ -126,6 +126,13 @@ ipcMain.handle("delete-boardById", async (_, id) => {
     UPDATE tally_db SET active = 0 WHERE id = ?
     `).run(id);
 });
+ipcMain.handle("delete-boardById", async (_, id) => {
+  if (!db) return [];
+  console.log("Deleteing Board: ", id);
+  return db.prepare(`
+    DELETE FROM tally_db WHERE id = ?
+    `).run(id);
+});
 ipcMain.handle("get-tally", async (_, id) => {
   if (!db) return [];
   return db.prepare(`
