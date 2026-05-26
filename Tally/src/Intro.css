@@ -37,3 +37,54 @@
   transform: translateY(-15px);
   color: white;
 }
+
+.playGroundButton {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 100px;
+  border: none;
+  margin: 10px 0 0 0;
+  background-color: rgb(0, 51, 0);
+  border: 2px solid rgb(0, 51, 0);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+  transition: 0.1s linear;
+  color: rgb(0, 136, 0);
+}
+.playGroundButton:hover {
+  cursor: pointer;
+  border: 2px solid rgb(0, 136, 0);
+  box-shadow: 0 0 20px 20px rgb(0, 51, 0);
+  z-index: 0;
+}
+#firstOuterCircle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 200px;
+  height: 200px;
+  transform: scale(0) translate(-50%, -50%);
+  border: 5px solid rgb(0, 51, 0);
+  border-radius: 200px;
+  opacity: 0;
+  transition: transform 0.4s ease-out;
+  transform-origin: top left; /*transform trick to center circle requires transform origin top left for center*/
+}
+.playGroundButton:hover #firstOuterCircle, .playGroundButton:hover #secondOuterCircle {
+  opacity: 1;
+  transform: scale(1) translate(-50%, -50%);
+}
+#secondOuterCircle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 400px;
+  height: 400px;
+  transform: scale(0) translate(-50%, -50%);
+  border: 5px solid rgb(0, 51, 0);
+  border-radius: 400px;
+  opacity: 0;
+  transition: transform 1s ease-out;
+  transform-origin: top left; /*transform trick to center circle requires transform origin top left for center*/
+}

@@ -117,7 +117,7 @@ ipcMain.handle('run-sql', async (_,sql: string) => {
 
 ipcMain.handle('is-admin', () => {
   if (process.env.NODE_ENV === 'development') {
-    console.log("Starting Application in Admin Mode")
+    console.log("Application is in Admin Mode")
     return true
   }
   return false

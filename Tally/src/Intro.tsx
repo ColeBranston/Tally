@@ -32,14 +32,21 @@ function Intro() {
   return (
     <div className='IntroBanner'>
       {isAdmin ?
-      <form onSubmit={runSQL}>
+      <>
+      <form style={{zIndex: '2'}} onSubmit={runSQL}>
         <input type='search' placeholder='Run SQL Command' onChange={(e:any) => setAdminSQL(e.target.value)}></input>
         <button type='submit' hidden></button>
       </form>
+      <button style={{zIndex: '1'}} className='playGroundButton' onClick={()=>navigate('/playground')}>
+        <span style={{zIndex: '0'}} id='firstOuterCircle'/>
+        <span style={{zIndex: '0'}} id='secondOuterCircle'/>
+        <span>Playground</span>
+        </button>
+      </>
       : null
       }
-      <p className={`bodyText welcomeText ${isHovering? 'hoverText' : undefined}`} style={{transition: 'color 0.1s linear, transform 0.5s ease-in'}}>Welcome to Tally</p>
-      <button className='startButton bodyText' onMouseEnter={() => setIsHovering(true)} onMouseLeave={()=>setIsHovering(false)} onClick={()=>navigate('/tallies')}><p className='bodyText'>Start</p></button>
+      <p className={`bodyText welcomeText ${isHovering? 'hoverText' : undefined}`} style={{zIndex: '2', transition: 'color 0.1s linear, transform 0.5s ease-in'}}>Welcome to Tally</p>
+      <button style={{zIndex: '2'}} className='startButton bodyText' onMouseEnter={() => setIsHovering(true)} onMouseLeave={()=>setIsHovering(false)} onClick={()=>navigate('/tallies')}><p className='bodyText'>Start</p></button>
     </div>
   )
 }

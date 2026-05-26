@@ -3,7 +3,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 import Intro from './Intro.tsx'
 import './index.css'
 
-import {Tallies, AddTally, TallyBoard, RecentlyDeleted} from './pages/index'
+import {Tallies, AddTally, TallyBoard, RecentlyDeleted, IndexPage} from './pages/index'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <HashRouter>
@@ -13,6 +13,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path='/addTally' element={<AddTally/>}/>
         <Route path='/board/:id' element={<TallyBoard/>}/>
         <Route path='/recentlyDeleted' element={<RecentlyDeleted/>}/>
+        {/* Playground routes for my own frontend tests involving more than just box styles */}
+        <Route path='/playground' element={<IndexPage/>}/>
       </Routes>
     </HashRouter>
 )
