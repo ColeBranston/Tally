@@ -40,6 +40,7 @@ function Intro() {
       <button style={{zIndex: '1'}} className='playGroundButton' onClick={()=>navigate('/playground')}>
         <span style={{zIndex: '0'}} id='firstOuterCircle'/>
         <span style={{zIndex: '0'}} id='secondOuterCircle'/>
+        <span style={{zIndex: '0'}} id='thirdOuterCircle'/>
         <span>Playground</span>
         </button>
       </>
